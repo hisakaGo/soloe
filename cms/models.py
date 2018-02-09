@@ -4,11 +4,17 @@ from django.db import models
 class List(models.Model):
     """リスト"""
     title = models.CharField('みだし', max_length=140, blank=True,)
-    
-    description = models.TextField('つけたし', blank=True,)
+
+    tags = models.CharField('しるし', max_length=255, blank=True,)
     
     def __str__(self):
         return self.title
+
+class Image(models.Model):
+    """画像"""
+    image = models.ImageField('さしえ',
+                              height_field=90,
+                              width_field=160,)
 
 class Content(models.Model):
     """収集する内容"""
@@ -16,46 +22,35 @@ class Content(models.Model):
     
     link = models.CharField('ありか', max_length=255, blank=True,)
     
-    description = models.TextField('つけたし', blank=True,)
+    description = models.CharField('つけたし', max_length=255, blank=True,)
     
-    image = models.ImageField('さしえ', \
-                              height_field=90, \
-                              width_field=160, \
-                              blank=True,)
+    image = models.ForeignKey(Image,
+                              verbose_name='さしえ',
+                              on_delete=models.SET_NULL,
+                              null=True,)
     
-    parent = models.ForeignKey(List, \
-                               verbose_name='そろい', \
-                               on_delete=models.CASCADE, \
-                               blank=True,
-                               default=0)
+    parent = models.ForeignKey(List,
+                               verbose_name='そろい',
+                               on_delete=models.CASCADE,
+                               default=0,)
     
     def __str__(self):
-        return self.title
+        return self.link
 
 class Comment(models.Model):
     """コメント"""
-    NONE = ''
-    COOL = 'C'
-    HOT = 'H'
-    USEFUL = 'U'
-    SPREAD = 'S'
+    coolFlg = models.BooleanField('かっけー', default=False,)
     
-    COMMENT_TYPE = ((NONE, ' '),
-                    (COOL, 'かっけー'),
-                    (HOT, 'あっちー'),
-                    (USEFUL, 'やくだつ'),
-                    (SPREAD, 'おひろめ'))
+    hotFlg = models.BooleanField('あっちー', default=False,)
+    
+    usefulFlg = models.BooleanField('おやくだち', default=False,)
+    
+    spreadFlg = models.BooleanField('おひろめ', default=False,)
     
     comment = models.CharField('おもひ', max_length=255, blank=True)
     
-    type = models.CharField('かんじ', \
-                            max_length=1, \
-                            choices=COMMENT_TYPE, \
-                            default=NONE, \
-                            blank=True)
-    
-    parent = models.ForeignKey(Content, \
-                               verbose_name='かんじ', \
+    parent = models.ForeignKey(Content,
+                               verbose_name='かんじ',
                                on_delete=models.CASCADE)
     
     def __str__(self):
