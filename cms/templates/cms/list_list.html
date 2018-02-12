@@ -10,7 +10,6 @@
         <tr>
           <th scope="col">ID</th>
           <th scope="col">みだし</th>
-          <th scope="col">しるし</th>
         </tr>
       </thead>
       <tbody>
@@ -18,7 +17,6 @@
         <tr>
           <th scope="row">{{ list.id }}</th>
           <td>{{ list.title }}</td>
-          <td>{{ list.tags }}</td>
           <td>
             <a href="{% url 'cms:list_mod' list_id=list.id %}" class="btn btn-outline-primary btn-sm">修正</a>
             <a href="{% url 'cms:list_del' list_id=list.id %}" class="btn btn-outline-danger btn-sm">削除</a>
